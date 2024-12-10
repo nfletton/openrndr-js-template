@@ -19,7 +19,32 @@
     </style>
 </head>
 <body>
-<canvas id="openrndr-canvas"></canvas>
-<script src="openrndr-program.js"></script>
+<select id="sketches" onchange="loadSketch(this.value)">
+    <option value="p1">Pink</option>
+    <option value="p2">Yellow</option>
+</select>
+<canvas id="openrndr-canvas" data-program=""></canvas>
+
+<script>
+    const PROGRAM_SCRIPT = "openrndr-program.js";
+    const sketchCanvas = document.querySelector("#openrndr-canvas");
+    const sketchSelector = document.querySelector("#sketches");
+
+    // default to first option on initial page load
+    sketchSelector.dispatchEvent(new Event('change'));
+
+    function loadSketch(progName) {
+        sketchCanvas.setAttribute("data-program", progName)
+        reloadProgramScript()
+    }
+
+    function reloadProgramScript() {
+        const existingCode = document.querySelector(`script[src="${PROGRAM_SCRIPT}"]`);
+        if (existingCode) existingCode.remove();
+        const scriptElement = document.createElement("script");
+        scriptElement.setAttribute('src', PROGRAM_SCRIPT)
+        sketchCanvas.after(scriptElement);
+    }
+</script>
 </body>
 </html>
